@@ -6,3 +6,5 @@ __pycache__/
 .venv/
 *.mp3
 *.wav
+node_modules/
+*.pyc

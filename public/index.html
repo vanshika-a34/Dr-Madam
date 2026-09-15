@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Medical Voice Assistant — Ask medical questions using voice or text and get AI-powered educational health information.">
+    <title>Medical Voice Assistant</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <h2 class="sidebar-title">About</h2>
+            <p class="sidebar-text">
+                This application uses OpenRouter + LangChain + MedlinePlus +
+                Faster-Whisper + Edge-TTS to provide medical information
+                through voice and text.
+            </p>
+
+            <h3 class="sidebar-section-title">Components</h3>
+            <ul class="sidebar-list">
+                <li>OpenRouter / GLM 5.3 Flash</li>
+                <li>LangChain tool calling</li>
+                <li>MedlinePlus</li>
+                <li>Faster-Whisper</li>
+                <li>Edge-TTS</li>
+            </ul>
+
+            <hr class="sidebar-divider">
+
+            <button class="btn btn-danger btn-full" id="clearBtn">
+                🗑️ Clear conversation
+            </button>
+
+            <p class="sidebar-caption">
+                Educational use only. Not a substitute for professional
+                medical advice.
+            </p>
+        </div>
+    </aside>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main content -->
+    <main class="main">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="btn btn-icon sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="5" x2="17" y2="5"/>
+                        <line x1="3" y1="10" x2="17" y2="10"/>
+                        <line x1="3" y1="15" x2="17" y2="15"/>
+                    </svg>
+                </button>
+                <h1 class="main-title">🩺 Medical Voice Assistant</h1>
+            </div>
+            <button class="btn btn-icon theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="theme-icon" id="themeIcon">☀️</span>
+            </button>
+        </header>
+
+        <p class="subtitle">
+            Ask a general medical-information question using your voice or text.
+        </p>
+
+        <div class="disclaimer">
+            <b>⚠️ Important:</b> This assistant provides general educational
+            information only. It does not diagnose conditions or prescribe
+            medicines. For medical concerns, consult a qualified healthcare
+            professional.
+        </div>
+
+        <!-- Backend status -->
+        <div class="status-bar" id="statusBar">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="status-text" id="statusText">Checking server connection...</span>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Voice Input Section -->
+        <section class="section">
+            <h2 class="section-title">🎙️ Ask using your voice</h2>
+
+            <div class="voice-controls">
+                <button class="btn btn-primary btn-full" id="recordBtn">
+                    <span id="recordIcon">🎙️</span>
+                    <span id="recordLabel">Start Recording</span>
+                </button>
+
+                <div class="recording-indicator" id="recordingIndicator">
+                    <span class="recording-dot"></span>
+                    Recording...
+                </div>
+            </div>
+
+            <!-- Transcription result -->
+            <div class="transcription-box" id="transcriptionBox" style="display: none;">
+                <div class="info-banner">
+                    <b>You said:</b> <span id="transcribedText"></span>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Text Input Section -->
+        <section class="section">
+            <h2 class="section-title">⌨️ Or type your question</h2>
+
+            <form class="text-input-form" id="textForm">
+                <input
+                    type="text"
+                    class="text-input"
+                    id="textInput"
+                    placeholder="Example: Can you explain hypertension in simple words?"
+                    autocomplete="off"
+                >
+                <button type="submit" class="btn btn-primary" id="sendBtn">
+                    Send
+                </button>
+            </form>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Chat Messages -->
+        <section class="section" id="chatSection" style="display: none;">
+            <div class="chat-container" id="chatContainer">
+                <!-- Messages rendered here by JS -->
+            </div>
+        </section>
+
+        <!-- Read Aloud Controls -->
+        <section class="section" id="ttsSection" style="display: none;">
+            <hr class="divider">
+            <h2 class="section-title">🔊 Read response aloud</h2>
+
+            <div class="tts-controls">
+                <button class="btn btn-primary" id="readAloudBtn">
+                    ▶️ Read Aloud
+                </button>
+                <button class="btn btn-secondary" id="stopAudioBtn">
+                    ⏹️ Stop
+                </button>
+            </div>
+
+            <div class="audio-player-container" id="audioPlayerContainer" style="display: none;">
+                <audio controls id="audioPlayer" class="audio-player"></audio>
+                <p class="caption">Use the audio player's controls to pause or stop playback.</p>
+            </div>
+        </section>
+
+        <!-- Sources -->
+        <section class="section" id="sourcesSection" style="display: none;">
+            <hr class="divider">
+            <h2 class="section-title">🔎 MedlinePlus information used</h2>
+            <div id="sourcesContainer">
+                <!-- Sources rendered here by JS -->
+            </div>
+        </section>
+
+        <!-- Loading overlay for long operations -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p class="loading-text" id="loadingText">Processing...</p>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
